@@ -12,6 +12,8 @@ namespace EliteResort.API.Data
         // Ketu regjistrojm tabelat tona
         public DbSet<Guest> Guests { get; set; }
 
+        public DbSet<Booking> Bookings { get; set; }
+
         // Ketu vazhdimi i tyre
     }
 }
