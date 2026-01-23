@@ -16,6 +16,8 @@ namespace EliteResort.API.Data
 
         public DbSet<Payment> Payments { get; set; }
 
+        public DbSet<Discount> Discounts { get; set; }
+
         // Ketu vazhdimi i tyre
     }
 }
