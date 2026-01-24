@@ -12,6 +12,8 @@ namespace EliteResort.API.Data
         // Ketu regjistrojm tabelat tona
         public DbSet<MenuItem> MenuItems { get; set; }
         public DbSet<RestaurantTable> RestaurantTables { get; set; }
+        public DbSet<Order> Orders { get; set; }
+
 
         public DbSet<Guest> Guests { get; set; }
 
