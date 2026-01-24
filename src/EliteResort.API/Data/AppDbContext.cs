@@ -14,6 +14,8 @@ namespace EliteResort.API.Data
         public DbSet<RestaurantTable> RestaurantTables { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<ResortEvent> ResortEvents { get; set; }
+        public DbSet<InventoryItem> Inventory { get; set; }
+
 
         public DbSet<Guest> Guests { get; set; }
 
