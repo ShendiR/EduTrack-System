@@ -4,18 +4,15 @@ namespace EliteResort.API.Models
 {
     public class Booking
     {
-        internal decimal TotalPrice;
-
         [Key]
         public int Id { get; set; }
 
         [Required]
         public int GuestId { get; set; }
-        public Guest Guest { get; set; }
+        public Guest Guest { get; set; } 
 
         [Required]
         public int RoomId { get; set; }
-        
         public Room Room { get; set; }
 
         [Required]
@@ -26,10 +23,7 @@ namespace EliteResort.API.Models
 
         public string Status { get; set; } = "Pending";
 
-        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
-
-       
         
-
+        public decimal TotalPrice { get; set; }
     }
 }
