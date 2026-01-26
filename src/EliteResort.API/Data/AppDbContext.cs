@@ -28,6 +28,8 @@ namespace EliteResort.API.Data
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RoomType> RoomTypes { get; set; }
 
+        public DbSet<Housekeeping> Housekeepings { get; set; }
+
         // Ketu vazhdimi i tyre
     }
 }
