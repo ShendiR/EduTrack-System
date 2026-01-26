@@ -26,6 +26,7 @@ namespace EliteResort.API.Data
         public DbSet<Discount> Discounts { get; set; }
 
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomType> RoomTypes { get; set; }
 
         // Ketu vazhdimi i tyre
     }
