@@ -19,24 +19,31 @@ namespace EliteResort.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
         {
-            return await _context.Bookings.ToListAsync();
+            // Përdorim .Include që të marrim edhe të dhënat e Guest dhe Room nga tabelat e tjera
+            return await _context.Bookings
+                .Include(b => b.Guest)
+                .Include(b => b.Room)
+                .ToListAsync();
         }
 
         [HttpPost]
-        [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            
+            // 1. Kontrollojmë nëse dhoma ekziston
             var room = await _context.Rooms.FindAsync(booking.RoomId);
             if (room == null) return NotFound("Room not found.");
 
-            
+            // 2. Sigurohemi që dhoma është e lirë
+            if (!room.IsAvailable) return BadRequest("This room is already occupied.");
+
+            // 3. Llogaritja e ditëve (të paktën 1 ditë)
             int days = (booking.CheckOutDate - booking.CheckInDate).Days;
             if (days <= 0) days = 1;
 
+            // 4. Llogaritja e çmimit automatikisht
             booking.TotalPrice = days * room.PricePerNight;
 
-            
+            // 5. Ndryshimi i statusit të dhomës në 'Jo e lirë'
             room.IsAvailable = false;
 
             _context.Bookings.Add(booking);
@@ -49,17 +56,19 @@ namespace EliteResort.API.Controllers
         public async Task<IActionResult> DeleteBooking(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
-            if (booking == null)
+            if (booking == null) return NotFound();
+
+            // RREGULLIMI: Kur fshihet rezervimi, dhoma bëhet përsëri "Available"
+            var room = await _context.Rooms.FindAsync(booking.RoomId);
+            if (room != null)
             {
-                return NotFound(); 
+                room.IsAvailable = true;
             }
 
             _context.Bookings.Remove(booking);
             await _context.SaveChangesAsync();
 
-            return NoContent(); 
+            return NoContent();
         }
     }
-
-
 }
