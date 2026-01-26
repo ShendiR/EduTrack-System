@@ -23,10 +23,25 @@ namespace EliteResort.API.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
+            
+            var room = await _context.Rooms.FindAsync(booking.RoomId);
+            if (room == null) return NotFound("Room not found.");
+
+            
+            int days = (booking.CheckOutDate - booking.CheckInDate).Days;
+            if (days <= 0) days = 1;
+
+            booking.TotalPrice = days * room.PricePerNight;
+
+            
+            room.IsAvailable = false;
+
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
+
             return CreatedAtAction(nameof(GetBookings), new { id = booking.Id }, booking);
         }
 
