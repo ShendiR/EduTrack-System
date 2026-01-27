@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axiosInstance";
 import { RotateCw } from "lucide-react";
-import GuestForm from "../../components/forms/GuestForm/GuestForm";
-import GuestTable from "../../components/forms/GuestForm/GuestTable";
+import GuestForm from "../../components/forms/GuestComponents/GuestForm";
+import GuestTable from "../../components/forms/GuestComponents/GuestTable";
 
 const GuestList = () => {
   const [guests, setGuests] = useState([]);
@@ -33,7 +33,8 @@ const GuestList = () => {
       setNewGuest({ firstName: "", lastName: "", email: "" });
       fetchGuests();
     } catch (err) {
-      alert("System failed to register guest. Please check your connection.");
+      console.error("Add Error:", err); // Tani 'err' po përdoret!
+      alert("System failed to register guest.");
     }
   };
 
@@ -47,7 +48,8 @@ const GuestList = () => {
         await api.delete(`/Guests/${id}`);
         fetchGuests();
       } catch (err) {
-        alert("Deletion failed. The record might have already been removed.");
+        console.error("Delete Error:", err); // Edhe këtu po përdoret!
+        alert("Deletion failed.");
       }
     }
   };

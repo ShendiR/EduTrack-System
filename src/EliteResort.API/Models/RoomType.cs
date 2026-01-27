@@ -10,5 +10,6 @@ namespace EliteResort.API.Models
         public string Name { get; set; } // Psh: "Standard", "Deluxe", "Suite"
         public string Description { get; set; }
         public decimal BasePrice { get; set; }
+
     }
 }
