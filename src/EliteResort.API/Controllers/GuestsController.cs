@@ -31,5 +31,17 @@ namespace EliteResort.API.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetGuests), new { id = guest.Id }, guest);
         }
+
+        [HttpDelete("{Id}")] 
+        public async Task<IActionResult> DeleteGuest(int Id)
+        {
+            var guest = await _context.Guests.FindAsync(Id);
+            if (guest == null) return NotFound();
+
+            _context.Guests.Remove(guest);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
     }
+
 }

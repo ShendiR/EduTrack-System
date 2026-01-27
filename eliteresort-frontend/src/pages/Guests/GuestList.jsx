@@ -1,31 +1,55 @@
-import { useEffect, useState } from 'react';
-import api from '../../api/axiosInstance';
+import { useEffect, useState } from "react";
+import api from "../../api/axiosInstance";
+import { RotateCw } from "lucide-react";
+import GuestForm from "../../components/guest/GuestForm";
+import GuestTable from "../../components/guest/GuestTable";
 
 const GuestList = () => {
   const [guests, setGuests] = useState([]);
-  const [newGuest, setNewGuest] = useState({ firstName: '', lastName: '', email: '' });
+  const [newGuest, setNewGuest] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchGuests = async () => {
+    setIsLoading(true);
     try {
-      const response = await api.get('/Guests');
-      setGuests(Array.isArray(response.data) ? response.data : []);
-    } catch (error) {
-      console.error("Gabim gjatë marrjes së të dhënave:", error);
+      const res = await api.get("/Guests");
+      const data = Array.isArray(res.data) ? res.data : res.data.value || [];
+      setGuests(data);
+    } catch (err) {
+      console.error("Connection error:", err);
+    } finally {
+      // Vonesë e vogël artificiale për të shijuar animacionin e refresh-it
+      setTimeout(() => setIsLoading(false), 600);
     }
   };
 
-  const handleAddGuest = async (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
     try {
-      // Dërgimi i të dhënave në Backend
-      await api.post('/Guests', newGuest);
-      // Pastrimi i formës dhe rifreskimi i listës
-      setNewGuest({ firstName: '', lastName: '', email: '' });
-      fetchGuests(); 
-      alert("Mysafiri u shtua me sukses!");
-    } catch (error) {
-      console.error("Gabim gjatë shtimit:", error);
-      alert("Ndodhi një gabim. Kontrollo nese Backend-i është RUN dhe CORS është i lejuar.");
+      await api.post("/Guests", newGuest);
+      setNewGuest({ firstName: "", lastName: "", email: "" });
+      fetchGuests();
+    } catch (err) {
+      alert("System failed to register guest. Please check your connection.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (
+      window.confirm(
+        "Are you sure you want to remove this guest from the directory?",
+      )
+    ) {
+      try {
+        await api.delete(`/Guests/${id}`);
+        fetchGuests();
+      } catch (err) {
+        alert("Deletion failed. The record might have already been removed.");
+      }
     }
   };
 
@@ -34,65 +58,59 @@ const GuestList = () => {
   }, []);
 
   return (
-    <div className="space-y-6">
-      {/* FORMA E SHTIMIT */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-4">Shto Mysafir të Ri</h2>
-        <form onSubmit={handleAddGuest} className="flex gap-4">
-          <input
-            type="text"
-            placeholder="Emri"
-            className="border p-2 rounded w-full"
-            value={newGuest.firstName}
-            onChange={(e) => setNewGuest({ ...newGuest, firstName: e.target.value })}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Mbiemri"
-            className="border p-2 rounded w-full"
-            value={newGuest.lastName}
-            onChange={(e) => setNewGuest({ ...newGuest, lastName: e.target.value })}
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="border p-2 rounded w-full"
-            value={newGuest.email}
-            onChange={(e) => setNewGuest({ ...newGuest, email: e.target.value })}
-            required
-          />
-          <button type="submit" className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">
-            Shto
-          </button>
-        </form>
-      </div>
+    <div className="min-h-screen bg-[#fafafa] text-slate-900 font-sans">
+      {/* Decorative Top Accent */}
+      <div className="h-1 w-full bg-linear-to-r from-slate-900 via-blue-800 to-slate-900"></div>
 
-      {/* TABELA E REZULTATEVE */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-800">Lista e Mysafirëve</h2>
-          <button onClick={fetchGuests} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-            Refresh
+      <div className="max-w-7xl mx-auto px-8 py-16">
+        {/* Header Section */}
+        <div className="flex justify-between items-end mb-16 border-b border-slate-100 pb-10">
+          <div className="space-y-2">
+            <span className="text-[10px] font-bold tracking-[0.4em] text-blue-600 uppercase">
+              Elite Resort & Spa
+            </span>
+            <h1 className="text-5xl font-serif italic text-slate-900">
+              Guest Directory
+            </h1>
+          </div>
+
+          <button
+            onClick={fetchGuests}
+            className="flex items-center gap-3 text-slate-400 hover:text-blue-600 transition-all duration-500 cursor-pointer text-xs font-bold tracking-widest uppercase"
+          >
+            <RotateCw
+              size={16}
+              className={`${isLoading ? "animate-spin text-blue-600" : "hover:rotate-180 transition-transform"}`}
+            />
+            {isLoading ? "Syncing..." : "Refresh Database"}
           </button>
         </div>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="p-3 border-b">Emri & Mbiemri</th>
-              <th className="p-3 border-b">Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            {guests.map((guest, index) => (
-              <tr key={index} className="hover:bg-gray-50">
-                <td className="p-3 border-b">{guest.firstName} {guest.lastName}</td>
-                <td className="p-3 border-b">{guest.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+        {/* Main Content: 2-Column Luxury Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-start">
+          {/* Form Column - Sticky for better UX */}
+          <div className="lg:col-span-4 sticky top-10">
+            <div className="bg-white p-10 rounded-4xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] border border-slate-50">
+              <GuestForm
+                newGuest={newGuest}
+                setNewGuest={setNewGuest}
+                onAdd={handleAdd}
+              />
+            </div>
+          </div>
+
+          {/* Table Column */}
+          <div className="lg:col-span-8">
+            <div className="bg-white rounded-4xl p-4 shadow-sm border border-slate-50">
+              <GuestTable guests={guests} onDelete={handleDelete} />
+            </div>
+
+            {/* Footer Note */}
+            <p className="mt-8 text-center text-slate-300 text-[11px] tracking-widest uppercase">
+              Authorized personnel only • © 2026 Elite Resort Management
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
