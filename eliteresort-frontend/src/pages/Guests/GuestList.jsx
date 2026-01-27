@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axiosInstance";
 import { RotateCw } from "lucide-react";
-import GuestForm from "../../components/guest/GuestForm";
-import GuestTable from "../../components/guest/GuestTable";
+import GuestForm from "../../components/forms/GuestForm/GuestForm";
+import GuestTable from "../../components/forms/GuestForm/GuestTable";
 
 const GuestList = () => {
   const [guests, setGuests] = useState([]);
@@ -22,7 +22,6 @@ const GuestList = () => {
     } catch (err) {
       console.error("Connection error:", err);
     } finally {
-      // Vonesë e vogël artificiale për të shijuar animacionin e refresh-it
       setTimeout(() => setIsLoading(false), 600);
     }
   };
@@ -59,11 +58,9 @@ const GuestList = () => {
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-slate-900 font-sans">
-      {/* Decorative Top Accent */}
       <div className="h-1 w-full bg-linear-to-r from-slate-900 via-blue-800 to-slate-900"></div>
 
       <div className="max-w-7xl mx-auto px-8 py-16">
-        {/* Header Section */}
         <div className="flex justify-between items-end mb-16 border-b border-slate-100 pb-10">
           <div className="space-y-2">
             <span className="text-[10px] font-bold tracking-[0.4em] text-blue-600 uppercase">
