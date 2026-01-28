@@ -9,7 +9,7 @@ const StatCards = () => {
     availableRooms: 0,
     totalGuests: 0
   });
-
+//a
   useEffect(() => {
     const fetchStats = async () => {
       try {
