@@ -9,11 +9,10 @@ namespace EliteResort.API.Models
 
         [Required]
         public int GuestId { get; set; }
-        public Guest Guest { get; set; } 
+        public Guest? Guest { get; set; } 
 
-        [Required]
         public int RoomId { get; set; }
-        public Room Room { get; set; }
+        public Room? Room { get; set; }
 
         [Required]
         public DateTime CheckInDate { get; set; }

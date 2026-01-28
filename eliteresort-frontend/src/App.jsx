@@ -1,9 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Sidebar from './components/layout/Sidebar';
-import Dashboard from './pages/Dashboard/Dashboard';
-import GuestList from './pages/Guests/GuestList';
-import RoomList from './pages/Rooms/RoomList';
-import MenuList from './pages/Restaurant/MenuList';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Sidebar from "./components/layout/Sidebar";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import GuestList from "./pages/Guests/GuestList";
+import RoomList from "./pages/Rooms/RoomList";
+import MenuList from "./pages/Restaurant/MenuList";
+import BookingList from "./pages/Bookings/BookingList";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/guests" element={<GuestList />} />
             <Route path="/rooms" element={<RoomList />} />
             <Route path="/restaurant" element={<MenuList />} />
+            <Route path="/bookings" element={<BookingList />} />
           </Routes>
         </main>
       </div>

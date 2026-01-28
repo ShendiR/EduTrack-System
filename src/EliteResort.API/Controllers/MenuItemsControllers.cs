@@ -26,5 +26,19 @@ namespace EliteResort.API.Controllers
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetMenuItems), new { id = item.Id }, item);
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMenuItem(int id)
+        {
+            var menuItem = await _context.MenuItems.FindAsync(id);
+            if (menuItem == null)
+            {
+                return NotFound(); // Kjo po kthehet tani sepse ID nuk po njihet
+            }
+
+            _context.MenuItems.Remove(menuItem);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
