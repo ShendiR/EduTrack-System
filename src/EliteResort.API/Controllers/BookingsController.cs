@@ -19,39 +19,46 @@ namespace EliteResort.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookings()
         {
-            // Përdorim .Include që të marrim edhe të dhënat e Guest dhe Room nga tabelat e tjera
             return await _context.Bookings
                 .Include(b => b.Guest)
                 .Include(b => b.Room)
+                .OrderByDescending(b => b.CheckInDate) 
                 .ToListAsync();
         }
 
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            // 1. Kontrollojmë nëse dhoma ekziston
+            // 1. Validimi i datave - Fillimisht shohim nëse datat kanë sens
+            if (booking.CheckInDate < DateTime.Now.Date)
+                return BadRequest("Data e hyrjes nuk mund të jetë në të kaluarën.");
+
+            if (booking.CheckOutDate <= booking.CheckInDate)
+                return BadRequest("Data e daljes duhet të jetë pas datës së hyrjes.");
+
+            // 2. Kontrollojmë nëse dhoma ekziston
             var room = await _context.Rooms.FindAsync(booking.RoomId);
             if (room == null) return NotFound("Room not found.");
 
-            // 2. Sigurohemi që dhoma është e lirë
-            if (!room.IsAvailable) return BadRequest("This room is already occupied.");
+            // 3. Kontrollojmë mbivendosjen e rezervimeve në databazë
+            bool isOccupied = await _context.Bookings.AnyAsync(b =>
+                b.RoomId == booking.RoomId &&
+                ((booking.CheckInDate >= b.CheckInDate && booking.CheckInDate < b.CheckOutDate) ||
+                 (booking.CheckOutDate > b.CheckInDate && booking.CheckOutDate <= b.CheckOutDate)));
 
-            // 3. Llogaritja e ditëve (të paktën 1 ditë)
+            if (isOccupied) return BadRequest("Kjo dhomë është e rezervuar për këto data.");
+
+            // 4. Llogaritja e ditëve dhe çmimit
             int days = (booking.CheckOutDate - booking.CheckInDate).Days;
             if (days <= 0) days = 1;
-
-            // 4. Llogaritja e çmimit automatikisht
             booking.TotalPrice = days * room.PricePerNight;
 
-            // 5. Ndryshimi i statusit të dhomës në 'Jo e lirë'
-            room.IsAvailable = false;
-
+            // 5. Ruajtja
             _context.Bookings.Add(booking);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetBookings), new { id = booking.Id }, booking);
         }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
