@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../../api/axiosInstance";
+import api from "../../../api/axiosInstance";
 import { DollarSign, CalendarCheck, Home, Users } from "lucide-react";
 
 const StatCards = () => {
