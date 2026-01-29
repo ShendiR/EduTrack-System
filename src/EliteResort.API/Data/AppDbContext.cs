@@ -33,5 +33,14 @@ namespace EliteResort.API.Data
         public DbSet<Amenity> Amenities { get; set; }
         public DbSet<RoomReview> RoomReviews { get; set; }
         // Ketu vazhdimi i tyre
+        public DbSet<SpaService> SpaServices { get; set; }
+
+        public DbSet<Activity> Activities { get; set; }
+
+        public DbSet<EquipmentRental> EquipmentRentals { get; set; }
+
+        public DbSet<Staff> Staff { get; set; }
+
+        public DbSet<ServiceBooking> ServiceBookings { get; set; }
     }
 }
