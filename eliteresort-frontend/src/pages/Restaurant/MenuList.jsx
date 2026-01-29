@@ -51,7 +51,7 @@ const MenuItem = () => {
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
-      <div className="h-1.5 w-full bg-gradient-to-r from-amber-200 via-amber-500 to-amber-200"></div>
+      <div className="h-1.5 w-full bg-linear-to-r from-amber-200 via-amber-500 to-amber-200"></div>
       <div className="max-w-7xl mx-auto px-8 py-20">
         <div className="flex justify-between items-end mb-20 border-b border-slate-100 pb-12">
           <div className="space-y-3">
