@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../../api/axiosInstance";
+import api from "../../../api/axiosInstance";
 import { PieChart, Activity } from "lucide-react";
 
 const OccupancyChart = () => {
