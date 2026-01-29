@@ -1,34 +1,36 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Sidebar from "./components/layout/Sidebar";
+import Navbar from "./components/layout/Navbar";
+
+// Importet e faqeve
 import Dashboard from "./pages/Dashboard/Dashboard";
 import GuestList from "./pages/Guests/GuestList";
 import RoomList from "./pages/Rooms/RoomList";
+import RoomTypeList from "./pages/RoomTypes/RoomTypeList";
 import MenuList from "./pages/Restaurant/MenuList";
 import BookingList from "./pages/Bookings/BookingList";
-import RoomTypeList from "./pages/RoomTypes/RoomTypeList";
-import Navbar from "./components/layout/Navbar";
 
 function App() {
   return (
     <Router>
-      <div className="flex min-h-screen bg-gray-100">
+      <div className="flex min-h-screen bg-[#FAFAFA]">
         {/* 1. Sidebar qëndron fiks në të majtë */}
         <Sidebar />
 
-        {/* 2. Krijuam një div të ri që mban Navbar-in dhe Main Content vertikalisht */}
-        <div className="flex-1 flex flex-col">
-          {/* Navbar vendoset këtu, sipër Routes */}
+        {/* 2. Pjesa kryesore në të djathtë */}
+        <div className="flex-1 flex flex-col h-screen overflow-hidden">
+          {/* Navbar lart */}
           <Navbar />
 
-          {/* Main Content me padding që të mos ngjitet me Navbarin */}
-          <main className="p-8">
+          {/* 3. Zona ku ndërrohen faqet (Dashboard, Bookings etj) */}
+          <main className="flex-1 overflow-y-auto p-8">
             <Routes>
               <Route path="/" element={<Dashboard />} />
+              <Route path="/bookings" element={<BookingList />} />
               <Route path="/guests" element={<GuestList />} />
               <Route path="/rooms" element={<RoomList />} />
               <Route path="/room-types" element={<RoomTypeList />} />
               <Route path="/restaurant" element={<MenuList />} />
-              <Route path="/bookings" element={<BookingList />} />
             </Routes>
           </main>
         </div>

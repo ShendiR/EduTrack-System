@@ -30,7 +30,7 @@ const BookingList = () => {
         await api.delete(`/Bookings/${id}`);
         fetchBookings(); // Rifreskon listën pas fshirjes
       } catch (err) {
-        alert("Gabim gjatë fshirjes së rezervimit.");
+        alert("Gabim gjatë fshirjes së rezervimit.",err);
       }
     }
   };
