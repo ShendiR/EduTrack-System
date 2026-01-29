@@ -1,11 +1,11 @@
 import { NavLink } from "react-router-dom";
-
 import {
   LayoutDashboard,
   Users,
   Bed,
   Utensils,
   CalendarCheck,
+  Layers // Ikonë për kategoritë
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -14,6 +14,7 @@ const Sidebar = () => {
     { path: "/bookings", icon: <CalendarCheck size={20} />, label: "Bookings" },
     { path: "/guests", icon: <Users size={20} />, label: "Guests" },
     { path: "/rooms", icon: <Bed size={20} />, label: "Rooms" },
+    { path: "/room-types", icon: <Layers size={20} />, label: "Room Types" }, // Butoni i ri
     { path: "/restaurant", icon: <Utensils size={20} />, label: "Restaurant" },
   ];
 
@@ -37,20 +38,15 @@ const Sidebar = () => {
             }
           >
             {item.icon}
-            <span className="font-medium text-sm tracking-wide">
-              {item.label}
-            </span>
+            <span className="font-medium text-sm tracking-wide">{item.label}</span>
           </NavLink>
         ))}
       </nav>
 
-      <div className="p-6 border-t border-slate-800">
-        <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold">
-          System Status
-        </div>
-        <div className="flex items-center gap-2 mt-2">
+      <div className="p-6 border-t border-slate-800 text-xs text-slate-500 italic">
+        <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-          <span className="text-xs text-slate-300 italic">Server Online</span>
+          Server Online
         </div>
       </div>
     </div>
