@@ -40,5 +40,7 @@ namespace EliteResort.API.Data
         public DbSet<EquipmentRental> EquipmentRentals { get; set; }
 
         public DbSet<Staff> Staff { get; set; }
+
+        public DbSet<ServiceBooking> ServiceBookings { get; set; }
     }
 }
