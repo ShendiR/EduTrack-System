@@ -11,9 +11,18 @@ import { useState } from "react";
 const Navbar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
+ 
+  const username = localStorage.getItem("username") || "Admin";
+
+ 
+  const handleSignOut = () => {
+    localStorage.clear(); // Fshin tokenin dhe emrin
+    window.location.href = "/login"; // Te dërgon te faqja e loginit
+  };
+
   return (
     <nav className="h-20 bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-8 sticky top-0 z-40">
-      {/* Search Bar - Me stil modern */}
+      {/* Search Bar */}
       <div className="relative w-96 group">
         <span className="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400 group-focus-within:text-indigo-500 transition-colors">
           <Search size={18} />
@@ -41,11 +50,12 @@ const Navbar = () => {
             className="flex items-center gap-3 p-1.5 pl-1.5 pr-3 hover:bg-slate-50 rounded-2xl transition-all border border-transparent hover:border-slate-100"
           >
             <div className="w-9 h-9 bg-linear-to-tr from-indigo-600 to-violet-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-200">
-              S
+              {/* Shfaqim shkronjën e parë të emrit */}
+              {username.charAt(0).toUpperCase()}
             </div>
             <div className="text-left hidden md:block">
               <p className="text-sm font-bold text-slate-800 leading-none">
-                Shendi Admin
+                {username} {/* Tani shfaqet Admin ose emri i loguar */}
               </p>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">
                 Super Admin
@@ -68,11 +78,15 @@ const Navbar = () => {
                 <User size={16} className="text-slate-400" /> My Profile
               </button>
               <button className="w-full px-4 py-2.5 text-left text-sm text-slate-600 hover:bg-slate-50 flex items-center gap-3">
-                <Settings size={16} className="text-slate-400" /> System
-                Settings
+                <Settings size={16} className="text-slate-400" /> System Settings
               </button>
               <div className="h-px bg-slate-50 my-2"></div>
-              <button className="w-full px-4 py-2.5 text-left text-sm text-rose-600 hover:bg-rose-50 flex items-center gap-3 font-semibold">
+              
+              {/* BUTONI I RREGULLUAR SIGN OUT */}
+              <button 
+                onClick={handleSignOut}
+                className="w-full px-4 py-2.5 text-left text-sm text-rose-600 hover:bg-rose-50 flex items-center gap-3 font-semibold"
+              >
                 <LogOut size={16} /> Sign Out
               </button>
             </div>
