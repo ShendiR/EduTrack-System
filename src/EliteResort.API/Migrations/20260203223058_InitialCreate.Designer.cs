@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EliteResort.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260203220008_lalalala")]
-    partial class lalalala
+    [Migration("20260203223058_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -568,7 +568,7 @@ namespace EliteResort.API.Migrations
                     b.ToTable("Staff");
                 });
 
-            modelBuilder.Entity("User", b =>
+            modelBuilder.Entity("EliteResort.API.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -577,6 +577,10 @@ namespace EliteResort.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

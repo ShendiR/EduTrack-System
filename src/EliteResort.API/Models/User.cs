@@ -1,12 +1,28 @@
-﻿public class User
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EliteResort.API.Models
 {
-    public int Id { get; set; }
-    public string Username { get; set; } = string.Empty; // Zgjidhja për warning-un
-    public string Email { get; set; } = string.Empty;    // Zgjidhja për warning-un
+    public class User
+    {
+        [Key]
+        public int Id { get; set; }
 
-    // Për byte array, përdor ? që të lejosh null deri sa të mbushen
-    public byte[]? PasswordHash { get; set; }
-    public byte[]? PasswordSalt { get; set; }
+        [Required]
+        public string Username { get; set; } = string.Empty;
 
-    public string Role { get; set; } = "Admin";         // Zgjidhja për warning-un
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        // Kjo fushë të duhet ty dhe Drinit për testimin e login-it direkt
+        [Required]
+        public string Password { get; set; } = string.Empty;
+
+        // Këto do t'i përdorë Jozefi më vonë për sigurinë e lartë
+        public byte[]? PasswordHash { get; set; }
+
+        public byte[]? PasswordSalt { get; set; }
+
+        public string Role { get; set; } = "Admin";
+    }
 }
