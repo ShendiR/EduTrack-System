@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace EliteResort.API.Models
 {
@@ -9,8 +10,9 @@ namespace EliteResort.API.Models
 
         [Required]
         public int GuestId { get; set; }
-        public Guest? Guest { get; set; } 
+        public Guest? Guest { get; set; }
 
+        [Required]
         public int RoomId { get; set; }
         public Room? Room { get; set; }
 
@@ -22,7 +24,9 @@ namespace EliteResort.API.Models
 
         public string Status { get; set; } = "Pending";
 
-        
         public decimal TotalPrice { get; set; }
+
+        public int? ActivityId { get; set; }
+        public int? EquipmentRentalId { get; set; }
     }
 }

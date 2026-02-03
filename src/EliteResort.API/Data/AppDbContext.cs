@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EliteResort.API.Models;
+using System.Linq;
 
 namespace EliteResort.API.Data
 {
@@ -27,13 +28,11 @@ namespace EliteResort.API.Data
         public DbSet<Staff> Staff { get; set; }
         public DbSet<ServiceBooking> ServiceBookings { get; set; }
 
-        // SHTO KËTË PJESË KËTU:
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Konfigurimi i saktësisë për vlerat monetare (Decimal)
-            // Kjo heq ato paralajmërimet e verdha që pamë më herët
+            // Konfigurimi i Decimal
             var decimalProps = modelBuilder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetProperties())
                 .Where(p => p.ClrType == typeof(decimal) || p.ClrType == typeof(decimal?));
@@ -43,12 +42,18 @@ namespace EliteResort.API.Data
                 property.SetColumnType("decimal(18,2)");
             }
 
-            // Mund të shtosh rregulla specifike nëse dëshiron, p.sh:
-            modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Room)
-                .WithMany()
-                .HasForeignKey(b => b.RoomId)
-                .OnDelete(DeleteBehavior.Restrict); // Nuk lejon fshirjen e dhomës nëse ka rezervim aktiv
+            // Fix për lidhjen Booking-Room
+            modelBuilder.Entity<Booking>(entity =>
+            {
+                entity.HasOne(b => b.Room)
+                      .WithMany()
+                      .HasForeignKey(b => b.RoomId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                // Zhdukja e hijeve
+                entity.Ignore("RoomId1");
+                entity.Ignore("RoomId2");
+            });
         }
     }
 }
