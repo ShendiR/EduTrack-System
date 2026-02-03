@@ -14,6 +14,7 @@ namespace EliteResort.API.Data
         public DbSet<ResortEvent> ResortEvents { get; set; }
         public DbSet<InventoryItem> Inventory { get; set; }
         public DbSet<Guest> Guests { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Discount> Discounts { get; set; }

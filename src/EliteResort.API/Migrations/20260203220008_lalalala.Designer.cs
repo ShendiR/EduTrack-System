@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EliteResort.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260202160542_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260203220008_lalalala")]
+    partial class lalalala
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -105,9 +105,6 @@ namespace EliteResort.API.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RoomId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -124,8 +121,6 @@ namespace EliteResort.API.Migrations
                     b.HasIndex("GuestId");
 
                     b.HasIndex("RoomId");
-
-                    b.HasIndex("RoomId1");
 
                     b.ToTable("Bookings");
                 });
@@ -573,6 +568,37 @@ namespace EliteResort.API.Migrations
                     b.ToTable("Staff");
                 });
 
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("EliteResort.API.Models.Booking", b =>
                 {
                     b.HasOne("EliteResort.API.Models.Activity", null)
@@ -594,10 +620,6 @@ namespace EliteResort.API.Migrations
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.HasOne("EliteResort.API.Models.Room", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("RoomId1");
 
                     b.Navigation("Guest");
 
@@ -632,11 +654,6 @@ namespace EliteResort.API.Migrations
                 });
 
             modelBuilder.Entity("EliteResort.API.Models.EquipmentRental", b =>
-                {
-                    b.Navigation("Bookings");
-                });
-
-            modelBuilder.Entity("EliteResort.API.Models.Room", b =>
                 {
                     b.Navigation("Bookings");
                 });
