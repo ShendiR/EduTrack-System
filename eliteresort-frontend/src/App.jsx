@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import SideBar from "./components/layout/Sidebar";
 import NavBar from "./components/layout/Navbar";
 
@@ -11,6 +16,7 @@ import MenuList from "./pages/Restaurant/MenuList";
 import BookingList from "./pages/Bookings/BookingList";
 import Login from "./pages/Auth/Login";
 import AmenityList from "./pages/Amenities/AmenityList"; // Importi eshte OK ✅
+import PaymentList from "./pages/Payments/PaymentList";
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -19,9 +25,9 @@ function App() {
     <Router>
       <Routes>
         {/* Rruga për Login */}
-        <Route 
-          path="/login" 
-          element={!isAuthenticated ? <Login /> : <Navigate to="/" />} 
+        <Route
+          path="/login"
+          element={!isAuthenticated ? <Login /> : <Navigate to="/" />}
         />
 
         {/* Mbrojtja e të gjitha rrugëve të tjera */}
@@ -40,12 +46,13 @@ function App() {
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/bookings" element={<BookingList />} />
                       <Route path="/guests" element={<GuestList />} />
+                      <Route path="/payments" element={<PaymentList />} />
                       <Route path="/rooms" element={<RoomList />} />
                       <Route path="/room-types" element={<RoomTypeList />} />
                       <Route path="/restaurant" element={<MenuList />} />
-                      
+
                       {/* KETU ISHTE MANGEESIA - E SHTUAM TANI ✅ */}
-                      <Route path="/amenities" element={<AmenityList />} /> 
+                      <Route path="/amenities" element={<AmenityList />} />
 
                       <Route path="*" element={<Navigate to="/" />} />
                     </Routes>

@@ -16,18 +16,37 @@ namespace EliteResort.API.Controllers
             _context = context;
         }
 
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Payment>>> GetPayments()
         {
+            
             return await _context.Payments.ToListAsync();
         }
 
+        
         [HttpPost]
         public async Task<ActionResult<Payment>> PostPayment(Payment payment)
         {
             _context.Payments.Add(payment);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetPayments), new { id = payment.Id }, payment);
+        }
+
+       
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletePayment(int id)
+        {
+            var payment = await _context.Payments.FindAsync(id);
+            if (payment == null)
+            {
+                return NotFound();
+            }
+
+            _context.Payments.Remove(payment);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
