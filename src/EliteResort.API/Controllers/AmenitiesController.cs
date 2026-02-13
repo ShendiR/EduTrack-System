@@ -13,7 +13,8 @@ namespace EliteResort.API.Controllers
         public AmenitiesController(AppDbContext context) { _context = context; }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities() => await _context.Amenities.ToListAsync();
+        public async Task<ActionResult<IEnumerable<Amenity>>> GetAmenities() =>
+            await _context.Amenities.ToListAsync();
 
         [HttpPost]
         public async Task<ActionResult<Amenity>> PostAmenity(Amenity amenity)
@@ -21,6 +22,17 @@ namespace EliteResort.API.Controllers
             _context.Amenities.Add(amenity);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetAmenities), new { id = amenity.Id }, amenity);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAmenity(int id)
+        {
+            var amenity = await _context.Amenities.FindAsync(id);
+            if (amenity == null) return NotFound();
+
+            _context.Amenities.Remove(amenity);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

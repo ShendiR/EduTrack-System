@@ -10,15 +10,15 @@ import RoomTypeList from "./pages/RoomTypes/RoomTypeList";
 import MenuList from "./pages/Restaurant/MenuList";
 import BookingList from "./pages/Bookings/BookingList";
 import Login from "./pages/Auth/Login";
+import AmenityList from "./pages/Amenities/AmenityList"; // Importi eshte OK ✅
 
 function App() {
-  // Kontrollojmë nëse përdoruesi ka një token në LocalStorage
   const isAuthenticated = !!localStorage.getItem("token");
 
   return (
     <Router>
       <Routes>
-        {/* Rruga për Login - nese eshte i loguar, e dergojme te Dashboard */}
+        {/* Rruga për Login */}
         <Route 
           path="/login" 
           element={!isAuthenticated ? <Login /> : <Navigate to="/" />} 
@@ -30,15 +30,11 @@ function App() {
           element={
             isAuthenticated ? (
               <div className="flex min-h-screen bg-[#FAFAFA]">
-                {/* Sidebar qëndron fiks në të majtë */}
                 <SideBar />
 
-                {/* Pjesa kryesore në të djathtë */}
                 <div className="flex-1 flex flex-col h-screen overflow-hidden">
-                  {/* Navbar lart */}
                   <NavBar />
 
-                  {/* Zona ku ndërrohen faqet */}
                   <main className="flex-1 overflow-y-auto p-8">
                     <Routes>
                       <Route path="/" element={<Dashboard />} />
@@ -47,14 +43,16 @@ function App() {
                       <Route path="/rooms" element={<RoomList />} />
                       <Route path="/room-types" element={<RoomTypeList />} />
                       <Route path="/restaurant" element={<MenuList />} />
-                      {/* Nëse shkruan diçka që nuk ekziston, ktheje te Dashboard */}
+                      
+                      {/* KETU ISHTE MANGEESIA - E SHTUAM TANI ✅ */}
+                      <Route path="/amenities" element={<AmenityList />} /> 
+
                       <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                   </main>
                 </div>
               </div>
             ) : (
-              // Nëse nuk është i loguar, çdo rrugë tjetër e dërgon te Login
               <Navigate to="/login" />
             )
           }
@@ -64,4 +62,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

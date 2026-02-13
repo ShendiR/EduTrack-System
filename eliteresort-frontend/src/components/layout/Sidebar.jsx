@@ -5,7 +5,8 @@ import {
   Bed,
   Utensils,
   CalendarCheck,
-  Layers // Ikonë për kategoritë
+  Layers,
+  Sparkles 
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -14,7 +15,8 @@ const Sidebar = () => {
     { path: "/bookings", icon: <CalendarCheck size={20} />, label: "Bookings" },
     { path: "/guests", icon: <Users size={20} />, label: "Guests" },
     { path: "/rooms", icon: <Bed size={20} />, label: "Rooms" },
-    { path: "/room-types", icon: <Layers size={20} />, label: "Room Types" }, // Butoni i ri
+    { path: "/room-types", icon: <Layers size={20} />, label: "Room Types" },
+    { path: "/amenities", icon: <Sparkles size={20} />, label: "Amenities" }, // KETU U SHTUA ✅
     { path: "/restaurant", icon: <Utensils size={20} />, label: "Restaurant" },
   ];
 
