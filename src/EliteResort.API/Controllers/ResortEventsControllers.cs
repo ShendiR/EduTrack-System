@@ -26,31 +26,33 @@ namespace EliteResort.API.Controllers
         public async Task<ActionResult<ResortEvent>> GetEvent(int id)
         {
             var resortEvent = await _context.ResortEvents.FindAsync(id);
-
-            if (resortEvent == null)
-            {
-                return NotFound();
-            }
-
+            if (resortEvent == null) return NotFound();
             return resortEvent;
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResortEvent>> PostEvent(ResortEvent ev)
+        public async Task<ActionResult<ResortEvent>> PostEvent([FromBody] ResortEvent ev)
         {
-            _context.ResortEvents.Add(ev);
-            await _context.SaveChangesAsync();
+            if (ev == null) return BadRequest("Te dhenat jane null");
 
-            return CreatedAtAction(nameof(GetEvent), new { id = ev.Id }, ev);
+            try
+            {
+                // Sigurohemi që EF nuk tenton të fusë ID manuale nëse është Identity Column
+                _context.ResortEvents.Add(ev);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetEvent), new { id = ev.Id }, ev);
+            }
+            catch (Exception ex)
+            {
+                // Kjo na tregon në Console nëse ka gabim me Database (psh. emri i kolonave)
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEvent(int id, ResortEvent ev)
+        public async Task<IActionResult> PutEvent(int id, [FromBody] ResortEvent ev)
         {
-            if (id != ev.Id)
-            {
-                return BadRequest();
-            }
+            if (id != ev.Id) return BadRequest("ID Mismatch");
 
             _context.Entry(ev).State = EntityState.Modified;
 
@@ -60,16 +62,9 @@ namespace EliteResort.API.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EventExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                if (!_context.ResortEvents.Any(e => e.Id == id)) return NotFound();
+                else throw;
             }
-
             return NoContent();
         }
 
@@ -77,20 +72,11 @@ namespace EliteResort.API.Controllers
         public async Task<IActionResult> DeleteEvent(int id)
         {
             var ev = await _context.ResortEvents.FindAsync(id);
-            if (ev == null)
-            {
-                return NotFound();
-            }
+            if (ev == null) return NotFound();
 
             _context.ResortEvents.Remove(ev);
             await _context.SaveChangesAsync();
-
             return NoContent();
-        }
-
-        private bool EventExists(int id)
-        {
-            return _context.ResortEvents.Any(e => e.Id == id);
         }
     }
 }

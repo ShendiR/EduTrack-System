@@ -15,8 +15,12 @@ import RoomTypeList from "./pages/RoomTypes/RoomTypeList";
 import MenuList from "./pages/Restaurant/MenuList";
 import BookingList from "./pages/Bookings/BookingList";
 import Login from "./pages/Auth/Login";
-import AmenityList from "./pages/Amenities/AmenityList"; // Importi eshte OK ✅
+import AmenityList from "./pages/Amenities/AmenityList";
 import PaymentList from "./pages/Payments/PaymentList";
+
+// SIGUROHU QE KETA EMRA PERPUTHEN ME FOLDERS TUAJ ✅
+import EventList from "./pages/Events/EventList";
+import TableList from "./pages/Restaurant/Tables/TableList";
 
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
@@ -30,7 +34,7 @@ function App() {
           element={!isAuthenticated ? <Login /> : <Navigate to="/" />}
         />
 
-        {/* Mbrojtja e të gjitha rrugëve të tjera */}
+        {/* Layout kryesor */}
         <Route
           path="/*"
           element={
@@ -44,16 +48,25 @@ function App() {
                   <main className="flex-1 overflow-y-auto p-8">
                     <Routes>
                       <Route path="/" element={<Dashboard />} />
+                      
+                      {/* --- MANAGEMENT GROUP --- */}
                       <Route path="/bookings" element={<BookingList />} />
                       <Route path="/guests" element={<GuestList />} />
                       <Route path="/payments" element={<PaymentList />} />
+                      
+                      {/* ROUTE E EVENTEVE ✅ */}
+                      <Route path="/events" element={<EventList />} />
+
+                      {/* --- ACCOMMODATIONS --- */}
                       <Route path="/rooms" element={<RoomList />} />
                       <Route path="/room-types" element={<RoomTypeList />} />
-                      <Route path="/restaurant" element={<MenuList />} />
-
-                      {/* KETU ISHTE MANGEESIA - E SHTUAM TANI ✅ */}
                       <Route path="/amenities" element={<AmenityList />} />
 
+                      {/* --- SERVICES --- */}
+                      <Route path="/restaurant" element={<MenuList />} />
+                      <Route path="/tables" element={<TableList />} />
+
+                      {/* Catch-all - kthehu ne dashboard nese path nuk ekziston */}
                       <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                   </main>
