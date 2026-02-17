@@ -17,6 +17,9 @@ import BookingList from "./pages/Bookings/BookingList";
 import Login from "./pages/Auth/Login";
 import AmenityList from "./pages/Amenities/AmenityList";
 import PaymentList from "./pages/Payments/PaymentList";
+import StaffList from './pages/Staff/StaffList';
+import SpaList from './pages/Spa/SpaList';
+import ActivityList from './pages/Activities/ActivityList';
 
 // SIGUROHU QE KETA EMRA PERPUTHEN ME FOLDERS TUAJ ✅
 import EventList from "./pages/Events/EventList";
@@ -65,6 +68,10 @@ function App() {
                       {/* --- SERVICES --- */}
                       <Route path="/restaurant" element={<MenuList />} />
                       <Route path="/tables" element={<TableList />} />
+
+                      <Route path="/staff" element={<StaffList />} />
+                      <Route path="/spa" element={<SpaList />} />
+                      <Route path="/activities" element={<ActivityList />} />
 
                       {/* Catch-all - kthehu ne dashboard nese path nuk ekziston */}
                       <Route path="*" element={<Navigate to="/" />} />
