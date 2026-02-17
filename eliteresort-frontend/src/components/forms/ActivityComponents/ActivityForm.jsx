@@ -1,58 +1,80 @@
 import { useState } from "react";
 import api from "../../../api/axiosInstance";
-import { Mountain, DollarSign, MapPin, Info } from "lucide-react";
+import { Mountain, DollarSign, MapPin, Users, Info } from "lucide-react";
 
 const ActivityForm = ({ onActivityAdded }) => {
   const [formData, setFormData] = useState({
-    name: "",
+    title: "",
     description: "",
     location: "",
-    price: ""
+    price: "",
+    maxParticipants: ""
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/Activities", {
-        ...formData,
-        price: parseFloat(formData.price)
-      });
+      const payload = {
+        title: formData.title,
+        description: formData.description,
+        location: formData.location,
+        price: parseFloat(formData.price),
+        maxParticipants: parseInt(formData.maxParticipants) || 0,
+        isAvailable: true
+      };
+
+      await api.post("/Activities", payload);
       alert("Aktiviteti u shtua me sukses!");
       onActivityAdded();
-      setFormData({ name: "", description: "", location: "", price: "" });
+      setFormData({ title: "", description: "", location: "", price: "", maxParticipants: "" });
     } catch (err) {
-      alert("Gabim gjatë shtimit të aktivitetit.");
+      console.error("Detajet e gabimit:", err.response?.data);
+      alert("Gabim gjatë shtimit. Kontrolloni nëse të gjitha fushat janë plotësuar.");
     }
   };
 
   return (
-    <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 mb-8 text-left">
+    <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 mb-8 text-left text-slate-800">
       <div className="flex items-center gap-3 mb-6">
-        <div className="bg-emerald-100 p-2 rounded-lg text-emerald-700">
+        <div className="bg-emerald-100 p-2 rounded-lg text-emerald-700 font-bold">
           <Mountain size={20} />
         </div>
-        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Regjistro Aktivitet të Ri</h2>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Shto Aktivitet të Ri</h2>
       </div>
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2 text-left">
-          <label className="text-xs font-semibold text-slate-400 uppercase ml-1">Emri i Aktivitetit</label>
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex flex-col gap-2 text-left">
+          <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Titulli (Title)</label>
           <input 
-            className="w-full bg-slate-50 border border-slate-100 p-4 rounded-2xl outline-none focus:border-emerald-500 transition-all text-left"
-            placeholder="Psh. Mountain Biking"
-            value={formData.name}
-            onChange={(e) => setFormData({...formData, name: e.target.value})}
+            className="bg-slate-50 p-4 rounded-2xl outline-none border border-slate-100 focus:border-emerald-500 transition-all"
+            placeholder="Psh. Hiking në Bjeshkë"
+            value={formData.title}
+            onChange={(e) => setFormData({...formData, title: e.target.value})}
             required 
           />
         </div>
 
-        <div className="space-y-2 text-left">
-          <label className="text-xs font-semibold text-slate-400 uppercase ml-1">Çmimi ($)</label>
+        <div className="flex flex-col gap-2 text-left">
+          <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Lokacioni</label>
+          <div className="relative">
+            <MapPin className="absolute left-4 top-4 text-slate-400" size={18} />
+            <input 
+              className="w-full bg-slate-50 p-4 pl-12 rounded-2xl outline-none border border-slate-100 focus:border-emerald-500 transition-all"
+              placeholder="Vendi i aktivitetit"
+              value={formData.location}
+              onChange={(e) => setFormData({...formData, location: e.target.value})}
+              required 
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 text-left">
+          <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Çmimi ($)</label>
           <div className="relative">
             <DollarSign className="absolute left-4 top-4 text-slate-400" size={18} />
             <input 
               type="number"
-              className="w-full bg-slate-50 border border-slate-100 p-4 pl-12 rounded-2xl outline-none focus:border-emerald-500 transition-all text-left"
+              className="w-full bg-slate-50 p-4 pl-12 rounded-2xl outline-none border border-slate-100 focus:border-emerald-500 transition-all"
               placeholder="0.00"
               value={formData.price}
               onChange={(e) => setFormData({...formData, price: e.target.value})}
@@ -61,34 +83,35 @@ const ActivityForm = ({ onActivityAdded }) => {
           </div>
         </div>
 
-        <div className="space-y-2 text-left">
-          <label className="text-xs font-semibold text-slate-400 uppercase ml-1">Lokacioni</label>
+        <div className="flex flex-col gap-2 text-left">
+          <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Maksimumi i Personave</label>
           <div className="relative">
-            <MapPin className="absolute left-4 top-4 text-slate-400" size={18} />
+            <Users className="absolute left-4 top-4 text-slate-400" size={18} />
             <input 
-              className="w-full bg-slate-50 border border-slate-100 p-4 pl-12 rounded-2xl outline-none focus:border-emerald-500 transition-all text-left"
-              placeholder="Psh. North Slope"
-              value={formData.location}
-              onChange={(e) => setFormData({...formData, location: e.target.value})}
+              type="number"
+              className="w-full bg-slate-50 p-4 pl-12 rounded-2xl outline-none border border-slate-100 focus:border-emerald-500 transition-all"
+              placeholder="Kapaciteti"
+              value={formData.maxParticipants}
+              onChange={(e) => setFormData({...formData, maxParticipants: e.target.value})}
             />
           </div>
         </div>
 
-        <div className="space-y-2 text-left">
-          <label className="text-xs font-semibold text-slate-400 uppercase ml-1">Përshkrimi</label>
+        <div className="flex flex-col gap-2 lg:col-span-2 text-left">
+          <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Përshkrimi</label>
           <div className="relative">
             <Info className="absolute left-4 top-4 text-slate-400" size={18} />
             <input 
-              className="w-full bg-slate-50 border border-slate-100 p-4 pl-12 rounded-2xl outline-none focus:border-emerald-500 transition-all text-left"
-              placeholder="Detaje të shkurtra..."
+              className="w-full bg-slate-50 p-4 pl-12 rounded-2xl outline-none border border-slate-100 focus:border-emerald-500 transition-all"
+              placeholder="Detaje rreth aktivitetit..."
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
             />
           </div>
         </div>
 
-        <button type="submit" className="md:col-span-2 bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-emerald-600 transition-all shadow-lg text-xs uppercase tracking-widest">
-          Shto Aktivitetin në Resort
+        <button type="submit" className="lg:col-span-3 bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-emerald-600 transition-all text-xs uppercase tracking-widest shadow-lg shadow-emerald-100">
+          Publiko Aktivitetin
         </button>
       </form>
     </div>

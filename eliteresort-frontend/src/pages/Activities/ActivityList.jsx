@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../api/axiosInstance';
-import ActivityForm from './ActivityForm';
-import ActivityTable from './ActivityTable';
+import api from "../../api/axiosInstance";
+import ActivityForm from "../../components/forms/ActivityComponents/ActivityForm";
+import ActivityTable from "../../components/forms/ActivityComponents/ActivityTable";
 
 const ActivityList = () => {
     const [activities, setActivities] = useState([]);
@@ -26,7 +26,7 @@ const ActivityList = () => {
                 await api.delete(`/Activities/${id}`);
                 fetchActivities();
             } catch (err) {
-                alert("Gabim gjatë fshirjes.");
+                alert("Nuk mund të fshihet aktiviteti.");
             }
         }
     };
@@ -37,17 +37,17 @@ const ActivityList = () => {
 
     return (
         <div className="p-8 space-y-8 bg-slate-50 min-h-screen text-left">
-            <div className="flex flex-col gap-1">
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight text-left">Elite Activities</h2>
-                <p className="text-slate-500 text-sm text-left">Organizoni dhe menaxhoni aventurat që ofron resorti.</p>
+            <div>
+                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Activities Management</h2>
+                <p className="text-slate-500 text-sm">Menaxhoni aktivitetet që ofron Resorti.</p>
             </div>
             
             <ActivityForm onActivityAdded={fetchActivities} />
 
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <h3 className="text-lg font-bold text-slate-800 mb-4 px-2 text-left">Lista e Aktiviteteve</h3>
+                <h3 className="text-lg font-bold text-slate-800 mb-4 px-2">Lista e Aktiviteteve</h3>
                 {loading ? (
-                    <div className="text-center p-10 text-slate-400 italic">Duke ngarkuar aktivitetet...</div>
+                    <div className="text-center p-10 text-slate-400 italic">Duke ngarkuar...</div>
                 ) : (
                     <ActivityTable activities={activities} onDelete={handleDelete} />
                 )}
