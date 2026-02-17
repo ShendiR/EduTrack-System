@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard, Users, Bed, Utensils, CalendarCheck,
   Layers, Sparkles, CreditCard, ChevronDown, ChevronRight,
-  LogOut, Star, Armchair
+  LogOut, Star, Armchair , UserCog , Mountain 
 } from "lucide-react";
 
 const Sidebar = () => {
@@ -98,6 +98,18 @@ const Sidebar = () => {
               <NavLink to="/events" className={({ isActive }) => `flex items-center gap-3 p-2 rounded-lg text-sm transition-all ${isActive ? "text-amber-500 font-bold" : "text-slate-400 hover:text-white"}`}>
                 <Star size={16} className="text-amber-500" /> Grand Events
               </NavLink>
+
+            <NavLink to="/staff" className={({ isActive }) => `flex items-center gap-3 p-2 rounded-lg text-sm transition-all ${isActive ? "text-amber-500 font-bold" : "text-slate-400 hover:text-white"}`}>
+            <UserCog size={16} /> Staff Members
+            </NavLink>
+
+            <NavLink to="/spa" className={({ isActive }) => `flex items-center gap-3 p-2 rounded-lg text-sm transition-all ${isActive ? "text-amber-500 font-bold" : "text-slate-400 hover:text-white"}`}>
+            <Sparkles size={16} /> Spa Services
+            </NavLink>
+
+            <NavLink to="/activities" className={({ isActive }) => `flex items-center gap-3 p-2 rounded-lg text-sm transition-all ${isActive ? "text-amber-500 font-bold" : "text-slate-400 hover:text-white"}`}>
+            <Mountain size={16} /> Activities
+            </NavLink>
             </div>
           )}
         </div>
