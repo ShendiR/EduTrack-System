@@ -1,40 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Sparkles, Plus } from 'lucide-react';
+import api from '../../../api/axiosInstance';
+import SpaForm from './SpaForm';
+import SpaTable from './SpaTable';
 
 const SpaList = () => {
     const [services, setServices] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const fetchServices = async () => {
+        try {
+            setLoading(true);
+            const res = await api.get('/SpaServices');
+            const data = Array.isArray(res.data) ? res.data : res.data.$values || [];
+            setServices(data);
+        } catch (err) {
+            console.error("Error te Spa:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        if (window.confirm("A jeni i sigurt që dëshironi ta fshini këtë shërbim?")) {
+            try {
+                await api.delete(`/SpaServices/${id}`);
+                fetchServices();
+            } catch (err) {
+                alert("Gabim gjatë fshirjes.");
+            }
+        }
+    };
 
     useEffect(() => {
-        axios.get('https://localhost:7247/api/SpaServices')
-            .then(res => setServices(res.data))
-            .catch(err => console.error("Error te Spa:", err));
+        fetchServices();
     }, []);
 
     return (
-        <div className="p-6 space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-slate-800">Shërbimet Spa</h2>
-                <button className="bg-slate-900 text-white px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-slate-800 transition-all">
-                    <Plus size={18} /> Shto Shërbim
-                </button>
+        <div className="p-8 space-y-8 bg-slate-50 min-h-screen text-left">
+            <div>
+                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Elite Spa & Wellness</h2>
+                <p className="text-slate-500 text-sm">Menaxhoni menunë e shërbimeve tuaja premium.</p>
             </div>
+            
+            <SpaForm onServiceAdded={fetchServices} />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {services.map((service) => (
-                    <div key={service.id} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                            <Sparkles className="text-indigo-500" size={24} />
-                            <div>
-                                <h3 className="font-bold text-slate-800">{service.name}</h3>
-                                <p className="text-xs text-slate-400 font-medium tracking-widest uppercase">Premium Service</p>
-                            </div>
-                        </div>
-                        <div className="text-right">
-                            <p className="text-xl font-bold text-indigo-600">${service.price}</p>
-                        </div>
-                    </div>
-                ))}
+            <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                <h3 className="text-lg font-bold text-slate-800 mb-4 px-2">Menuja e Shërbimeve</h3>
+                {loading ? (
+                    <div className="text-center p-10 text-slate-400">Duke ngarkuar shërbimet...</div>
+                ) : (
+                    <SpaTable services={services} onDelete={handleDelete} />
+                )}
             </div>
         </div>
     );
