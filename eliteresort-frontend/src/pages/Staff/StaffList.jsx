@@ -1,39 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Users, UserPlus } from 'lucide-react';
+import api from '../../../api/axiosInstance'; 
+import StaffForm from './StaffForm';
+import StaffTable from './StaffTable';
 
 const StaffList = () => {
     const [staff, setStaff] = useState([]);
+    const [loading, setLoading] = useState(true);
 
+    
+    const fetchStaff = async () => {
+        try {
+            setLoading(true);
+            const res = await api.get('/Staff');
+            
+            
+            const data = Array.isArray(res.data) 
+                ? res.data 
+                : res.data.$values || [];
+            
+            setStaff(data);
+        } catch (err) {
+            console.error("Gabim gjatë ngarkimit të stafit:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    
+    const handleDelete = async (id) => {
+        if (window.confirm("A jeni i sigurt që dëshironi ta fshini këtë punonjës?")) {
+            try {
+                await api.delete(`/Staff/${id}`);
+                
+                fetchStaff();
+            } catch (err) {
+                console.error("Gabim gjatë fshirjes:", err);
+                alert("Nuk mund të fshihet ky punonjës. Kontrolloni nëse është i lidhur me ndonjë proces tjetër.");
+            }
+        }
+    };
+
+    
     useEffect(() => {
-        axios.get('https://localhost:7247/api/Staff')
-            .then(res => setStaff(res.data))
-            .catch(err => console.error("Error te Stafi:", err));
+        fetchStaff();
     }, []);
 
     return (
-        <div className="p-6 space-y-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-slate-800">Menaxhimi i Stafit</h2>
-                <button className="bg-slate-900 text-white px-4 py-2 rounded-xl flex items-center gap-2 hover:bg-slate-800 transition-all">
-                    <UserPlus size={18} /> Shto Punonjës
-                </button>
+        <div className="p-8 space-y-8 bg-slate-50 min-h-screen">
+            <div className="flex flex-col gap-1">
+                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Elite Staff Management</h2>
+                <p className="text-slate-500 text-sm">Menaxhoni stafin, pozitat dhe informacionet e kontaktit.</p>
             </div>
+            
+            <div className="grid grid-cols-1 gap-8">
+                {/* Komponenti i Formes per te shtuar punonjes te rinj */}
+                <section>
+                    <StaffForm onStaffAdded={fetchStaff} />
+                </section>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {staff.map((s) => (
-                    <div key={s.id} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                        <div className="flex items-center gap-4">
-                            <div className="bg-indigo-50 p-3 rounded-xl text-indigo-600">
-                                <Users size={24} />
-                            </div>
-                            <div>
-                                <h3 className="font-bold text-slate-800">{s.fullName || s.name}</h3>
-                                <p className="text-sm text-slate-500 font-medium uppercase tracking-tighter">{s.role}</p>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+                {/* Komponenti i Tabeles per te shfaqur dhe fshir punonjesit */}
+                <section className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+                    <h3 className="text-lg font-bold text-slate-800 mb-4 px-2">Lista e Punonjësve Aktivë</h3>
+                    {loading ? (
+                        <div className="flex justify-center p-10 text-slate-400 italic">Duke ngarkuar stafin...</div>
+                    ) : (
+                        <StaffTable staff={staff} onDelete={handleDelete} />
+                    )}
+                </section>
             </div>
         </div>
     );
